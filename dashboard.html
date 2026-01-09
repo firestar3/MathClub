@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Math Club Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="dashboard.js"></script>
+</head>
+
+<body>
+    <div class="background-animation">
+        <canvas id="bg-canvas"></canvas>
+    </div>
+
+    <nav class="portal-nav glass-panel">
+        <div class="logo">Math <span class="highlight">Club</span></div>
+        <div class="user-profile">
+            <span id="user-email-display">Loading...</span>
+            <button id="logout-btn" class="btn-secondary small">Sign Out</button>
+        </div>
+    </nav>
+
+    <main class="portal-content">
+        <div class="container">
+            <header class="dashboard-header">
+                <h2>Active Competitions</h2>
+                <p>Enter the proctor password to unlock a competition.</p>
+            </header>
+
+            <div class="competitions-grid" id="competitions-list">
+                <!-- Competition Cards injected by JS -->
+            </div>
+
+            <div class="scores-section">
+                <div class="section-header">
+                    <h2>Your Performance</h2>
+                    <div class="title-underline"></div>
+                </div>
+                <div class="glass-panel table-container">
+                    <table class="scores-table">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Date</th>
+                                <th>Score</th>
+                                <th>Rank</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scores-body">
+                            <!-- Scores injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Password Modal -->
+    <div id="password-modal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <span class="close-modal">&times;</span>
+            <h3 id="modal-comp-title">Competition Access</h3>
+            <p>This exam is proctored. Please enter the session password provided by your supervisor.</p>
+            <form id="comp-password-form">
+                <input type="password" id="comp-password" placeholder="Session Password" required>
+                <button type="submit" class="btn-primary">Unlock Exam</button>
+            </form>
+            <div id="modal-error" class="error-msg"></div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Open | Math Club Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="exam.js"></script>
+    <style>
+        .exam-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(5, 10, 20, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+        }
+
+        .timer-badge {
+            background: var(--primary);
+            color: black;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: var(--font-heading);
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .exam-container {
+            max-width: 800px;
+            margin: 100px auto 4rem;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+
+        .question-num {
+            color: var(--secondary);
+            font-family: var(--font-heading);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 4px;
+            color: var(--primary);
+            font-size: 1.1rem;
+            font-family: var(--font-body);
+        }
+
+        .answer-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+    </style>
+    <script>
+        // Safety Check (Same as index.html)
+        window.onload = function () {
+            if (window.location.protocol === 'file:') {
+                const banner = document.createElement('div');
+                banner.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#ff4d4d;color:white;text-align:center;padding:15px;z-index:9999;font-weight:bold;';
+                banner.innerHTML = '⚠️ SETUP ERROR: Open via localhost to enable submission.';
+                document.body.prepend(banner);
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <div class="background-animation">
+        <canvas id="bg-canvas"></canvas>
+    </div>
+
+    <header class="exam-header">
+        <div class="logo">2026 <span class="highlight">Open</span></div>
+        <div id="timer" class="timer-badge">45:00</div>
+    </header>
+
+    <main class="exam-container">
+        <div id="questions-list">
+            <!-- Questions injected here -->
+        </div>
+
+        <button id="submit-exam-btn" class="btn-primary full-width"
+            style="margin-top: 2rem; padding: 1.5rem; font-size: 1.2rem;">Submit Exam</button>
+    </main>
+
+</body>
+
+</html>
