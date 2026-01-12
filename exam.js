@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-import { getDatabase, ref, push, get, child } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+import { getDatabase, ref, push, get, child, set, remove } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA26i_VumRnCZxe1bfDBWXb563ly_w5mn0",
@@ -51,9 +51,9 @@ async function initExam() {
     // Check if already taken to prevent direct URL access
     const dbRef = ref(db);
     try {
-        const snapshot = await get(child(dbRef, `users/${currentUser.uid}/scores`));
-        if (snapshot.exists()) {
-            const scores = snapshot.val();
+        const scoreSnapshot = await get(child(dbRef, `users/${currentUser.uid}/scores`));
+        if (scoreSnapshot.exists()) {
+            const scores = scoreSnapshot.val();
             // Check if any score event matches "2026 Open"
             const hasTaken = Object.values(scores).some(s => s.event === "2026 Open");
             if (hasTaken) {
@@ -62,11 +62,33 @@ async function initExam() {
                 return;
             }
         }
+
+        // --- Persistent Timer Logic ---
+        const startTimeRef = ref(db, `users/${currentUser.uid}/activeExams/2026 Open/startTime`);
+        const startTimeSnapshot = await get(startTimeRef);
+
+        let startTime;
+        if (startTimeSnapshot.exists()) {
+            startTime = startTimeSnapshot.val();
+        } else {
+            startTime = Date.now();
+            await set(startTimeRef, startTime);
+        }
+
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        timeLeft = (45 * 60) - elapsedSeconds;
+
+        renderQuestions();
+
+        if (timeLeft <= 0) {
+            alert("Time for this competition has expired.");
+            submitExam();
+            return;
+        }
     } catch (e) {
-        console.error("Error checking previous attempts:", e);
+        console.error("Error during initExam:", e);
     }
 
-    renderQuestions();
     startTimer();
     document.getElementById('submit-exam-btn').addEventListener('click', () => submitExam());
 }
@@ -131,6 +153,9 @@ async function submitExam() {
 
     try {
         await push(scoresRef, newEntry);
+        // Clear active exam timer
+        await remove(ref(db, `users/${currentUser.uid}/activeExams/2026 Open`));
+
         alert(`Exam Submitted!\nYour Score: ${score}/${QUESTIONS.length}`);
         window.location.href = 'dashboard.html';
     } catch (e) {

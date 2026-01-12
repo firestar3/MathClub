@@ -108,14 +108,41 @@ function setupScoresListener(user) {
 
 function renderScores(data) {
     const tbody = document.getElementById('scores-body');
+    const ratingEl = document.getElementById('user-rating');
     tbody.innerHTML = '';
 
     if (!data) {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding: 2rem;">No competitions taken yet.</td></tr>';
+        ratingEl.textContent = "0.00 / 8";
         return;
     }
 
     const scoresArray = Object.values(data).reverse();
+
+    // Calculate Rating
+    const points = scoresArray.map(s => {
+        switch (s.rank) {
+            case 'Perfect': return 8;
+            case 'Gold': return 7;
+            case 'Silver': return 5;
+            case 'Bronze': return 3;
+            case 'Participant': return 1;
+            default: return 0;
+        }
+    });
+
+    // Rating = Average of top 50%
+    points.sort((a, b) => b - a); // Descending
+    const topCount = Math.ceil(points.length * 0.5);
+    const topPoints = points.slice(0, topCount);
+
+    let avg = 0;
+    if (topPoints.length > 0) {
+        const sum = topPoints.reduce((a, b) => a + b, 0);
+        avg = sum / topPoints.length;
+    }
+
+    ratingEl.textContent = `${avg.toFixed(2)} / 8`;
 
     scoresArray.forEach(score => {
         const row = document.createElement('tr');
